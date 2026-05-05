@@ -145,9 +145,6 @@ startForm.addEventListener('submit', async (e) => {
         dashboardView.style.display = 'none';
         interviewView.style.display = 'flex';
         sessionBadge.innerText = `Session #${currentSessionId}`;
-        
-        // Start Video
-        setupVideo();
 
         // Append first question and speak it
         appendMessage('agent', data.first_question);
@@ -249,17 +246,6 @@ function removeLoader(id) {
 
 // ----------------- Video & Voice Features -----------------
 
-// Video Setup
-const userVideo = document.getElementById('user-video');
-async function setupVideo() {
-    try {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
-        if(userVideo) userVideo.srcObject = stream;
-    } catch (err) {
-        console.error("Camera access denied or unavailable", err);
-    }
-}
-
 // Speech Recognition (Voice Input)
 const micBtn = document.getElementById('mic-btn');
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -313,12 +299,6 @@ document.getElementById('end-interview-btn').addEventListener('click', async () 
     if(confirm("Are you sure you want to end the interview?")) {
         // Stop speech
         if('speechSynthesis' in window) window.speechSynthesis.cancel();
-        
-        // Stop video
-        if(userVideo && userVideo.srcObject) {
-            userVideo.srcObject.getTracks().forEach(track => track.stop());
-            userVideo.srcObject = null;
-        }
         
         interviewView.style.display = 'none';
         
